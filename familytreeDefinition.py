@@ -1,5 +1,7 @@
 class Person:
     def __init__(self, inName, inMother, inSex):
+        inSex = inSex.strip()
+        #print(inName,'#',inSex,'#')
         self.__name=inName
         self.__mother=inMother
         self.__sex=inSex
@@ -35,19 +37,30 @@ class Person:
             return self.__children
 
     def add_child(self, child):
+        #print("Adding",child.get_name(),"to ",self.get_name())
         self.__children.append(child)
         return child
     
+    # def find_relation(self, relationHops):
+    #     if(relationHops == ''):
+    #         return person
+    #     elif(relationHops[0] == 'M'):
+    #         return self.get_mother()
+    #     elif(relationHops[0] == None):
+    #         return "Invalid"
+    #     else:
+    #         self.find_relation(self, relationHops[1:])
+    #     return
+
     def find_relation(self, relationHops):
-        if(relationHops == ''):
-            return person
+        if(relationHops == []):
+            return self
         elif(relationHops[0] == 'M'):
-            return self.get_mother()
-        elif(relationHops[0] == None):
-            return "Invalid"
+            return self.get_mother().find_relation(relationHops[1:])
+        elif(relationHops[0] == 'S'):
+            return self.get_spouse().find_relation(relationHops[1:])
         else:
-            self.find_relation(self, relationHops[1:])
-        return
+            pass
 
 class Family:
     members = {}
@@ -59,16 +72,18 @@ class Family:
     def get_members(self):
         return self.members
 
-    def add_marriage(self, spouse1Name, spouse2Name):
-        #   TODO - Add logic to create a person for the spouse that doesn't exist - make it the second one always
-        #          Add the gender of the spouse to the function call and the input file
+    def add_member(self, kid):
+        self.members[kid.get_name()] = kid
+
+    def add_marriage(self, spouse1Name, spouse2Name, spouseSex='N'):
+        if spouse2Name not in self.members.keys():
+            self.add_member(Person(spouse2Name,None,spouseSex))
         spouse1 = self.members[spouse1Name]
         spouse2 = self.members[spouse2Name]
+        #print("Marry", spouse1Name, "and", spouse2Name)
         spouse1.set_spouse(spouse2)
         spouse2.set_spouse(spouse1)
 
-    def add_member(self, kid):
-        self.members[kid.get_name()] = kid
         
     def add_birth(self, motherName, childName, sex):
         mother = self.members[motherName]
@@ -79,12 +94,17 @@ class Family:
         self.add_member(kid)
     
     def __get_relation_path(self, relation):
-        #print("For mother")
-        return 'M'
+        rel = relation.strip().lower()
+        if rel == 'mother':
+            return ['M']
+        elif rel == 'grand-mother':
+            return ['M','M']
     
     def get_relation(self, personName, relation):
         person = self.members[personName]
         relationPath = self.__get_relation_path(relation)
         result = person.find_relation(relationPath)
-        if(result != "Invalid"):
+        if(result != None):
             return result.get_name()
+        else:
+            return "PERSON_NOT_FOUND"

@@ -1,6 +1,6 @@
 ADD_CHILD Anga Chit M
 ADD_CHILD Anga Ish M
-ADD_CHILD Anga Vch M
+ADD_CHILD Anga Vich M
 ADD_CHILD Anga Aras M
 ADD_CHILD Anga Satya F
 
@@ -11,9 +11,9 @@ ADD_SPOUSE Satya Vyam M
 
 ADD_CHILD Amba Dritha F
 ADD_CHILD Amba Tritha F
-ADD_CHILD Amba Vritha M
 ADD_CHILD Lika Vila F
 ADD_CHILD Lika Chika F
+ADD_CHILD Amba Vritha M
 ADD_CHILD Chitra Jnki F
 ADD_CHILD Chitra Ahit M
 ADD_CHILD Satya Asva M
