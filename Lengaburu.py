@@ -12,9 +12,24 @@ def main():
         for command in inFile.readlines():
             parse_input(command)
 
+    print("Setup of tree done. Here they are:")
+    for children in family["Shan"].get_child():
+        print(children.get_name(),end=', ') #   TODO: Add a tree traversal here
+    print()
+
 def parse_input(command):
     if command == '':
         pass
+    params = command.split(' ')
+    if(params[0] == "ADD_CHILD"):
+        Lengaburu.add_birth(params[1], params[2], params[3])
+    elif(params[0] == "FIND_RELATIONSHIP"):
+        print("The ", params[2], " of ", params[1], " is : ", end='')
+        print(Lengaburu.get_relation(params[1],params[2]))
+    elif(params[0] == "ADD_SPOUSE"):
+        Lengaburu.add_marriage(params[1],params[2])
+    else:
+        print("You've given me a command I don't understand :(")
 
 
 main()
