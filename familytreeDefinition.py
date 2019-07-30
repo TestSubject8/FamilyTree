@@ -54,11 +54,14 @@ class Family:
     def __init__(self, inKingName, inQueenName):
         self.members[inKingName] = Person("King "+inKingName, None, 'M')
         self.members[inQueenName] = Person("Queen "+inQueenName, None, 'F')
+        self.add_marriage("Shan","Anga")
         
     def get_members(self):
         return self.members
 
     def add_marriage(self, spouse1Name, spouse2Name):
+        #   TODO - Add logic to create a person for the spouse that doesn't exist - make it the second one always
+        #          Add the gender of the spouse to the function call and the input file
         spouse1 = self.members[spouse1Name]
         spouse2 = self.members[spouse2Name]
         spouse1.set_spouse(spouse2)
@@ -71,7 +74,7 @@ class Family:
         mother = self.members[motherName]
         if(mother.get_sex == 'M'):
             mother = mother.get_spouse()
-        print("adding kid to ", mother.get_name())
+        #print("adding kid to ", mother.get_name())
         kid = mother.add_child(Person(childName,mother,sex))
         self.add_member(kid)
     
