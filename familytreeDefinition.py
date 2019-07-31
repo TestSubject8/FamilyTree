@@ -29,38 +29,62 @@ class Person:
         else:
             print("Already set spouse to ", self.get_spouse())
     
-    def get_child(self):
-        if(self.get_sex() == 'M'):
-            mom = self.get_spouse()
-            return mom.get_child()
+#    def get_child(self):
+#        if(self.get_sex() == 'M'):
+#            mom = self.get_spouse() #   Handles searching for a males children
+#            return mom.get_child()
+#        else:
+#            return self.__children
+        
+    def get_child(self,sex='A'):
+        if(self.get_sex() == 'M'):  #   Handles case of being called on Father
+            mother = self.get_spouse()
         else:
-            return self.__children
+            mother = self
+        required_children = []
+        for child in self.__children:
+            if sex == 'A':
+                required_children.append(child)
+            elif self.get_sex() == sex:
+                required_children.append(child)
+        return required_children
+
+    def get_sibling(self,sex):
+        #print('Sibling',sex,'of',self.get_name())
+        mother = self.get_mother()
+        if mother == None:
+            return None
+        all_siblings = mother.get_child(sex)
+        #all_siblings = all_siblings - self
+        all_siblings.remove(self)
+        #print(all_siblings)
+        return all_siblings
 
     def add_child(self, child):
         #print("Adding",child.get_name(),"to ",self.get_name())
+        print('CHILD_ADDITION_SUCCESSFUL')
         self.__children.append(child)
         return child
-    
-    # def find_relation(self, relationHops):
-    #     if(relationHops == ''):
-    #         return person
-    #     elif(relationHops[0] == 'M'):
-    #         return self.get_mother()
-    #     elif(relationHops[0] == None):
-    #         return "Invalid"
-    #     else:
-    #         self.find_relation(self, relationHops[1:])
-    #     return
 
     def find_relation(self, relationHops):
+        #print('Reached',self.get_name())
         if(relationHops == []):
-            return self
-        elif(relationHops[0] == 'M'):
+            return [self]
+        elif(relationHops[0] == 'Mother'):
             return self.get_mother().find_relation(relationHops[1:])
-        elif(relationHops[0] == 'S'):
+        elif(relationHops[0] == 'Spouse'):
             return self.get_spouse().find_relation(relationHops[1:])
+        elif(relationHops[0] == 'Child'):
+            return self.get_child()
+        elif(relationHops[0][:-1] == 'Sibling'):    #   Compressing three comparisions into one, as the last character is actually a function parameter
+            return self.get_sibling(relationHops[0][-1])
+        elif(relationHops[0] == 'Daughter'):
+            return self.get_child('F')
+        elif(relationHops[0] == 'Son'):
+            return self.get_child('M')
         else:
             pass
+            print('find_relation',relationHops)
 
 class Family:
     members = {}
@@ -95,16 +119,39 @@ class Family:
     
     def __get_relation_path(self, relation):
         rel = relation.strip().lower()
-        if rel == 'mother':
-            return ['M']
-        elif rel == 'grand-mother':
-            return ['M','M']
+        path = rel.split('-')
+        path_steps = []
+        for step in path:
+            if step == 'mother' or step == 'maternal':
+                step = ['Mother']
+            elif step == 'father' or step == 'paternal':
+                step = ['Mother','Spouse']
+            elif step == 'brother' or step == 'uncle':  #   Assuming uncle always has maternal or paternal specified, so the parent hop is implied
+                step = ['SiblingM']
+            elif step =='sister' or step == 'aunt': #   Assuming parent hop is specified
+                step = ['SiblingF']
+            elif step == 'sibling' or step == 'siblings':
+                step = ['SiblingA']
+            elif step == 'In' or step == 'Law':
+                pass    #   TODO - handle in-laws
+            elif step == 'son':
+                step = ['Son']
+            elif step == 'daughter':    #   These two are added to maintain a standard. They are funtionally useless lines
+                step = ['Daughter']
+            elif step == 'son':
+                step = ['Son']
+            else:
+                pass
+            path_steps.extend(step)
+        #print('Follow: ',path_steps)
+        return path_steps
     
     def get_relation(self, personName, relation):
         person = self.members[personName]
         relationPath = self.__get_relation_path(relation)
         result = person.find_relation(relationPath)
         if(result != None):
-            return result.get_name()
+            for relative in result:
+                return relative.get_name()
         else:
             return "PERSON_NOT_FOUND"

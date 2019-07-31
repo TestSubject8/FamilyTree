@@ -11,11 +11,6 @@ def main():
         for command in inFile.readlines():
             parse_input(command)
 
-    # print("Setup of tree done. Here they are:")
-    # for children in family["Shan"].get_child():
-    #     print(children.get_name(),end=', ') #   TODO: Add a tree traversal here
-    # print()
-
 def parse_input(command):
     if command == '' or command == '\n':
         pass
