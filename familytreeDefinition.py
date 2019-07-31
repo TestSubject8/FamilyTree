@@ -41,11 +41,13 @@ class Person:
             mother = self.get_spouse()
         else:
             mother = self
+        #print(sex,'Child(s)','of',mother.get_name())
         required_children = []
         for child in self.__children:
+            #print("Match:",child.get_name(),child.get_sex())
             if sex == 'A':
                 required_children.append(child)
-            elif self.get_sex() == sex:
+            elif child.get_sex() == sex:
                 required_children.append(child)
         return required_children
 
@@ -55,19 +57,19 @@ class Person:
         if mother == None:
             return None
         all_siblings = mother.get_child(sex)
-        #all_siblings = all_siblings - self
-        all_siblings.remove(self)
+        if self in all_siblings:
+            all_siblings.remove(self)
         #print(all_siblings)
         return all_siblings
 
     def add_child(self, child):
         #print("Adding",child.get_name(),"to ",self.get_name())
-        print('CHILD_ADDITION_SUCCESSFUL')
+        #print('CHILD_ADDITION_SUCCESSFUL')
         self.__children.append(child)
         return child
 
     def find_relation(self, relationHops):
-        #print('Reached',self.get_name())
+        #print('Relative: ',self.get_name())
         if(relationHops == []):
             return [self]
         elif(relationHops[0] == 'Mother'):
@@ -84,7 +86,7 @@ class Person:
             return self.get_child('M')
         else:
             pass
-            print('find_relation',relationHops)
+            print('find_relation missing: ',relationHops)
 
 class Family:
     members = {}

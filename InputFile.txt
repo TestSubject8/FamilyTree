@@ -3,5 +3,6 @@ FIND_RELATIONSHIP Laki Mother
 FIND_RELATIONSHIP Laki Paternal-Aunt
 
 ADD_CHILD Chitra Aria Female
-FIND_RELATIONSHIP Aria Sister
+FIND_RELATIONSHIP Aria Sibling
 FIND_RELATIONSHIP Chitra Daughter
+FIND_RELATIONSHIP Laki Maternal-Uncle
