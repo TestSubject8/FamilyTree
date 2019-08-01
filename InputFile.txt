@@ -6,3 +6,4 @@ ADD_CHILD Chitra Aria Female
 FIND_RELATIONSHIP Aria Sibling
 FIND_RELATIONSHIP Chitra Daughter
 FIND_RELATIONSHIP Laki Maternal-Uncle
+FIND_RELATIONSHIP Atya Sister-In-Law
