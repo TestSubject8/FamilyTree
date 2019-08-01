@@ -22,6 +22,7 @@ class Person:
     
     def get_spouse(self,sex='A'):
         if sex == 'A':
+            #print(self.__spouse.get_name(), 'spouse of', self.get_name())
             return self.__spouse
         elif self.__spouse.get_sex() == sex:
             #print(self.__spouse.get_name(), 'spouse of', self.get_name())
@@ -65,12 +66,11 @@ class Person:
 
     def add_child(self, child):
         #print("Adding",child.get_name(),"to ",self.get_name())
-        print('CHILD_ADDITION_SUCCESSFUL')
         self.__children.append(child)
         return child        
 
     def find_relation(self, relationHops):
-#        print('Relative: ',self.get_name())
+#        print('Relative: ',self.get_name(), 'to fetch:', relationHops)
         all_relatives = []
         resultSet = []
         if(relationHops == []):
@@ -89,15 +89,18 @@ class Person:
             result = self.get_child('M')
         else:
             pass
-            print('find_relation missing: ',relationHops)
+#            print('find_relation missing: ',relationHops)
         if result != None:
             resultSet.extend(result)
-#        print(resultSet)
+#        print('resultset:', len(resultSet))
         if relationHops == []:
-            all_relatives.extend(resultSet)
+            if resultSet != []:
+                all_relatives.extend(resultSet)
         else:
-            for person in resultSet:
-                all_relatives.extend(person.find_relation(relationHops[1:]))
+            if resultSet != [None] and resultSet != None and resultSet != []:
+                for person in resultSet:
+    
+                    all_relatives.extend(person.find_relation(relationHops[1:]))
         return all_relatives
 
 class Family:
