@@ -24,7 +24,7 @@ class Person:
         if sex == 'A':
             return self.__spouse
         elif self.__spouse.get_sex() == sex:
-            print(self.__spouse.get_name(), 'spouse of', self.get_name())
+            #print(self.__spouse.get_name(), 'spouse of', self.get_name())
             return self.__spouse
         else:
             return None
@@ -47,50 +47,58 @@ class Person:
             if sex == 'A':
                 required_children.append(child)
             elif child.get_sex() == sex:
-                print(child.get_sex())
+#                print(child.get_sex())
                 required_children.append(child)
         return required_children
 
     def get_sibling(self,sex):
-        print('Sibling',sex,'of',self.get_name())
+        #print('Sibling',sex,'of',self.get_name())
         mother = self.get_mother()
         if mother == None:
+            #print('Outsider')
             return None
         all_siblings = mother.get_child(sex)
         if self in all_siblings:
             all_siblings.remove(self)
-        print(all_siblings)
+#        print('Siblings:', all_siblings)
         return all_siblings
 
     def add_child(self, child):
         #print("Adding",child.get_name(),"to ",self.get_name())
-        #print('CHILD_ADDITION_SUCCESSFUL')
+        print('CHILD_ADDITION_SUCCESSFUL')
         self.__children.append(child)
-        return child
+        return child        
 
     def find_relation(self, relationHops):
-        print('Relative: ',self.get_name())
+#        print('Relative: ',self.get_name())
+        all_relatives = []
+        resultSet = []
         if(relationHops == []):
-            return [self]
+            result = [self]
         elif(relationHops[0] == 'Mother'):
-            return self.get_mother().find_relation(relationHops[1:])
+            result = [self.get_mother()]
         elif(relationHops[0][:-1] == 'Spouse'):
-            spouse = self.get_spouse(relationHops[0][-1])
-            if spouse != None:
-                return spouse.find_relation(relationHops[1:])
-            else:
-                return None
+            result = [self.get_spouse(relationHops[0][-1])]
         elif(relationHops[0] == 'Child'):
-            return self.get_child()
+            result = self.get_child()
         elif(relationHops[0][:-1] == 'Sibling'):    #   Compressing three comparisions into one, as the last character is actually a function parameter
-            return self.get_sibling(relationHops[0][-1])
+            result = self.get_sibling(relationHops[0][-1])
         elif(relationHops[0] == 'Daughter'):
-            return self.get_child('F')
+            result = self.get_child('F')
         elif(relationHops[0] == 'Son'):
-            return self.get_child('M')
+            result = self.get_child('M')
         else:
             pass
             print('find_relation missing: ',relationHops)
+        if result != None:
+            resultSet.extend(result)
+#        print(resultSet)
+        if relationHops == []:
+            all_relatives.extend(resultSet)
+        else:
+            for person in resultSet:
+                all_relatives.extend(person.find_relation(relationHops[1:]))
+        return all_relatives
 
 class Family:
     members = {}
@@ -136,7 +144,7 @@ class Family:
             if step == 'mother' or step == 'maternal':
                 path_steps.extend(['Mother'])
             elif step == 'father' or step == 'paternal':
-                path_steps.extend(['Mother','Spouse'])  #   Assuming father is always mother's husband
+                path_steps.extend(['Mother','SpouseA'])  #   Assuming father is always mother's husband
             elif step == 'brother' or step == 'uncle':  #   Assuming uncle always has maternal or paternal specified, so the parent hop is implied
                 path_steps.extend(['SiblingM'])
             elif step =='sister' or step == 'aunt': #   Assuming parent hop is specified
@@ -157,13 +165,13 @@ class Family:
                 pass
             #path_steps.extend(step)
         all_paths.append(path_steps)
-        print('Follow: ',all_paths)
+        #print('Follow: ',all_paths)
         return all_paths
     
     def get_relation(self, personName, relation):
         person = self.members[personName]
         relationPath = self.__get_relation_path(relation)
-        print(relationPath)
+#        print(relationPath)
         all_relatives = []
         for path in relationPath:
             relativeList = person.find_relation(path) 
@@ -176,4 +184,4 @@ class Family:
                 relative_names.append(relative.get_name())
             return relative_names
         else:
-            return "PERSON_NOT_FOUND"
+            return None

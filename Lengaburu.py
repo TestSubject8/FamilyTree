@@ -19,7 +19,12 @@ def parse_input(command):
         Lengaburu.add_birth(params[1], params[2], params[3])
     elif(params[0] == "FIND_RELATIONSHIP"):
         #print("The ", params[2].strip(), " of ", params[1].strip(), " is : ", end='')
-        print(Lengaburu.get_relation(params[1],params[2]))
+        relatives = Lengaburu.get_relation(params[1],params[2])
+        if relatives == None:
+            print("PERSON_NOT_FOUND")
+        for person in relatives:
+            print(person, end=' ')
+        print()
     elif(params[0] == "ADD_SPOUSE"):
         Lengaburu.add_marriage(params[1],params[2],params[3])
     else:
