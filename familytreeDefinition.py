@@ -42,9 +42,11 @@ class Person:
         else:
             mother = self
         #print(sex,'Child(s)','of',mother.get_name())
+        if mother == None:
+            return None
         required_children = []
         for child in self.__children:
-            #print("Match:",child.get_name(),child.get_sex())
+#            print("Match:",child.get_name(),child.get_sex())
             if sex == 'A':
                 required_children.append(child)
             elif child.get_sex() == sex:
@@ -61,7 +63,9 @@ class Person:
         all_siblings = mother.get_child(sex)
         if self in all_siblings:
             all_siblings.remove(self)
-#        print('Siblings:', all_siblings)
+        #print('Siblings:')
+        #for c in all_siblings:
+        #    print(c.get_name())
         return all_siblings
 
     def add_child(self, child):
@@ -131,7 +135,7 @@ class Family:
         if(mother.get_sex == 'M'):
             mother = mother.get_spouse()
         #print("adding kid to ", mother.get_name())
-        kid = mother.add_child(Person(childName,mother,sex))
+        kid = mother.add_child(Person(childName,mother,sex[0]))
         self.add_member(kid)
     
     def __get_relation_path(self, relation):
@@ -172,7 +176,10 @@ class Family:
         return all_paths
     
     def get_relation(self, personName, relation):
-        person = self.members[personName]
+        person = self.members.get(personName)
+        #print(person)
+        if person == None:
+            return 'NOTFOUND'
         relationPath = self.__get_relation_path(relation)
 #        print(relationPath)
         all_relatives = []

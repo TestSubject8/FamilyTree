@@ -19,15 +19,17 @@ def parse_input(command, isVerbose):
         Lengaburu.add_birth(params[1], params[2], params[3])
         if isVerbose:
             print('CHILD_ADDITION_SUCCESSFUL')
-    elif(params[0] == "FIND_RELATIONSHIP"):
+    elif(params[0] == "GET_RELATIONSHIP"):
         #print("The ", params[2].strip(), " of ", params[1].strip(), " is : ", end='')
         relatives = Lengaburu.get_relation(params[1],params[2])
         if relatives == None or relatives == [] or relatives == [None]:
+            print('NONE')
+        elif(relatives == 'NOTFOUND'):
             print("PERSON_NOT_FOUND")
         else: 
             for person in relatives:
                 print(person, end=' ')
-                print()
+            print()
     elif(params[0] == "ADD_SPOUSE"):
         Lengaburu.add_marriage(params[1],params[2],params[3])
     else:
